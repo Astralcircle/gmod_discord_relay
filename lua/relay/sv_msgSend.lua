@@ -199,7 +199,7 @@ hook.Add("Initialize", "!!discord_srvStarted", function()
 	hook.Remove("Initialize", "!!discord_srvStarted")
 end)
 
-timer.Create("ServerStatus_Discord", 1, 0, function()
+timer.Create("ServerStatus_Discord", 60, 0, function()
 	local playersList = ""
 	local plyall = player.GetAll()
 	local plyallcount = #plyall
@@ -233,5 +233,5 @@ timer.Create("ServerStatus_Discord", 1, 0, function()
 		["attachments"] = {}
 	}
 
-	Discord.editMessage(form, "1259410534978162781")
+	Discord.editMessage(form, "1259413437079879712")
 end)
