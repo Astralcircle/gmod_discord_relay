@@ -26,6 +26,20 @@ function Discord.send(form)
 	})
 end
 
+function Discord.editMessage(form, messageId)
+    if type(form) ~= "table" or not messageId then Error("[Discord] invalid parameters!") return end
+
+    CHTTP({
+        ["failed"] = function(msg)
+            print("[Discord] " .. msg)
+        end,
+        ["method"] = "PATCH",
+        ["url"] = Discord.statuswebhook .. "/messages/" .. messageId,
+        ["body"] = util_TableToJSON(form),
+        ["type"] = "application/json; charset=utf-8"
+    })
+end
+
 local function getAvatar(id, co)
 	http_Fetch( "https://steamcommunity.com/profiles/"..id.."?xml=1", 
 	function(body)
@@ -183,4 +197,41 @@ hook.Add("Initialize", "!!discord_srvStarted", function()
 
 	Discord.send(form)
 	hook.Remove("Initialize", "!!discord_srvStarted")
+end)
+
+timer.Create("ServerStatus_Discord", 1, 0, function()
+	local playersList = ""
+	local plyall = player.GetAll()
+	local plyallcount = #plyall
+
+	if plyallcount > 0 then
+		for _, ply in ipairs(plyall) do
+			playersList = playersList .. ply:Nick() .. "\n"
+		end
+	else
+		playersList = "Никого"
+	end
+
+	local PLAYERS_COUNT = plyallcount
+	local MAP = game.GetMap()
+	local UPTIME = math.Round(SysTime() / 3600, 1)
+	local MAP_UPTIME = math.Round(CurTime() / 3600, 1)
+	local MODELCACHE = GetGlobalInt("ModelCache", 0) .. "/4096"
+
+	local desc = string.format("**Игроки:**\n```\n%s\n```\n:busts_in_silhouette: Кол-во игроков: %d\n:map: Карта: %s\n:tools: Кэш моделей: %s\n:repeat: Аптайм сервера: %s часов\n:clock1: Аптайм карты: %s часов", playersList, PLAYERS_COUNT, MAP, MODELCACHE, UPTIME, MAP_UPTIME)
+
+	local form = {
+		["username"] = Discord.hookname,
+		["embeds"] = {
+			{
+				["title"] = GetHostName(),
+				["url"] = "https://classicbox.myarena.site/join.html",
+				["description"] = desc,
+				["color"] = nil,
+			}
+		},
+		["attachments"] = {}
+	}
+
+	Discord.editMessage(form, "1259410534978162781")
 end)

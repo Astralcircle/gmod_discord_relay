@@ -1,5 +1,7 @@
 Discord = {
 	['webhook'] = "paste_url",
+
+	['statuswebhook'] = "paste_url",
 	
 	['hookname'] = "Gmod Relay",
 
