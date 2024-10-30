@@ -53,7 +53,9 @@ local function getAvatar(id, co)
 	end )
 end
 
-local function formMsg( ply, str )
+local function formMsg(arguments, ply, str )
+	if #arguments[2] <= 0 then return end
+
 	local id = tostring( ply:SteamID64() )
 
 	local co = coroutine_create( function() 
@@ -179,7 +181,7 @@ local function plyDisconnect(ply)
 
 end
 
-hook.Add("PlayerSay", "!!discord_sendmsg", formMsg)
+hook.Add("PlayerSay", "!!discord_sendmsg", formMsg, POST_HOOK)
 gameevent.Listen( "player_connect" )
 hook.Add("player_connect", "!!discord_plyConnect", playerConnect)
 hook.Add("PlayerInitialSpawn", "!!discordPlyFrstSpawn", plyFrstSpawn)
