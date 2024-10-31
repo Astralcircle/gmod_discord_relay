@@ -187,13 +187,15 @@ hook.Add("player_connect", "!!discord_plyConnect", playerConnect)
 hook.Add("PlayerInitialSpawn", "!!discordPlyFrstSpawn", plyFrstSpawn)
 gameevent.Listen( "player_disconnect" )
 hook.Add("player_disconnect", "!!discord_onDisconnect", plyDisconnect)
-hook.Add("Initialize", "!!discord_srvStarted", function() 
+hook.Add("Initialize", "!!discord_srvStarted", function()
+	local mapchange = SysTime() > 120
+
 	local form = {
 		["username"] = Discord.hookname,
 		["embeds"] = {{
-			["title"] = "Сервер запущен!",
-			["description"] = "Карта сейчас - " .. game.GetMap(),
-			["color"] = 5793266
+			["title"] = mapchange and "Карта перезапущена" or "Сервер перезапущен",
+			["description"] = mapchange and "Карта была перезапущена сервером/админами" or "Сервер был перезапущен в следствии краша или по иным причинам",
+			["color"] = 1027840
 		}}
 	}
 
@@ -208,7 +210,7 @@ timer.Create("ServerStatus_Discord", 60, 0, function()
 
 	if plyallcount > 0 then
 		for _, ply in ipairs(plyall) do
-			playersList = playersList .. ply:Nick() .. "\n"
+			playersList = playersList .. string.Replace(ply:Nick(), "```", "'''") .. "\n"
 		end
 	else
 		playersList = "Никого"
