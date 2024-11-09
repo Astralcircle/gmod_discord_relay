@@ -220,7 +220,7 @@ timer.Create("ServerStatus_Discord", 60, 0, function()
 	local MAP = game.GetMap()
 	local UPTIME = math.Round(SysTime() / 3600, 1)
 	local MAP_UPTIME = math.Round(CurTime() / 3600, 1)
-	local MODELCACHE = GetGlobalInt("ModelCache", 0) .. "/4096"
+	local MODELCACHE = GetGlobalInt("ModelCache", 0) .. "/8192"
 
 	local desc = string.format("**Игроки:**\n```\n%s\n```\n:busts_in_silhouette: Кол-во игроков: %d\n:map: Карта: %s\n:tools: Кэш моделей: %s\n:repeat: Аптайм сервера: %s часов\n:clock1: Аптайм карты: %s часов", playersList, PLAYERS_COUNT, MAP, MODELCACHE, UPTIME, MAP_UPTIME)
 
